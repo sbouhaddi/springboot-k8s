@@ -12,11 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BookmarkService {
   private final BookmarkRepository bookmarkRepository;
+  private static final BookmarkMapper bookmarkMapper = BookmarkMapper.INSTANCE;
 
   @Transactional(readOnly = true)
   public BookmarksDto getAllBookmarks(final Integer page) {
-    val pageNo = page < 0 ? 0 : page - 1;
+    val pageNo = page < 1 ? 0 : page - 1;
     val pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "createdAt");
-    return new BookmarksDto(bookmarkRepository.findAll(pageable));
+    return new BookmarksDto(
+        bookmarkRepository.findAll(pageable).map(bookmarkMapper::bookmarkToBookmarkDTO));
+    /* return new BookmarksDto(
+    bookmarkRepository.findBookmarks(pageable));*/
   }
 }

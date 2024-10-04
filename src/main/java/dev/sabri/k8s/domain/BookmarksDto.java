@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 public record BookmarksDto(
-    List<Bookmark> data,
+    List<BookmarkDto> data,
     long totalElements,
     int totalPages,
     int currentPage,
@@ -13,7 +13,7 @@ public record BookmarksDto(
     boolean hasNext,
     boolean hasPrevious) {
 
-  public BookmarksDto(Page<Bookmark> bookmarkPage) {
+  public BookmarksDto(Page<BookmarkDto> bookmarkPage) {
     this(
         bookmarkPage.getContent(),
         bookmarkPage.getTotalElements(),
