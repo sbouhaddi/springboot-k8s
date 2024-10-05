@@ -2,16 +2,7 @@ name: Build
 
 on:
   push:
-    paths:
-      - "k8s-api/**"
-    branches: [ "main" ]
-  pull_request:
-    paths:
-      - "k8s-api/**"
-    types:
-      - opened
-      - synchronize
-      - reopened
+    branches: [ "**" ]
 
 jobs:
   build-k8S-api:
