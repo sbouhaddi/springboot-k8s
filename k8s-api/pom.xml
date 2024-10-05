@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>dev.sabri</groupId>
-    <artifactId>k8s-sample</artifactId>
+    <artifactId>k8s-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>k8s-sample</name>
+    <name>k8s-api</name>
     <description>Demo project for Spring Boot And k8s</description>
     <url/>
     <licenses>
@@ -121,7 +121,7 @@
                 <configuration>
                     <image>
                         <name>
-                            sbouhaddi/k8s-sample
+                            sbouhaddi/k8s-api
                         </name>
                     </image>
                     <excludes>
@@ -184,7 +184,7 @@
                         <image>eclipse-temurin:21-jre</image>
                     </from>
                     <to>
-                        <image>sbouhaddi/k8s-sample</image>
+                        <image>sbouhaddi/k8s-api</image>
                         <tags>
                             <tag>latest</tag>
                             <tag>0.0.1</tag>

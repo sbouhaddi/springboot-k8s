@@ -7,4 +7,4 @@ mvn jib:dockerBuild
 
 mvn spring-boot:build-image
 
-docker run  -p 8080:8080 sbouhaddi/k8s-sample  
+docker run  -p 8080:8080 sbouhaddi/k8s-api
