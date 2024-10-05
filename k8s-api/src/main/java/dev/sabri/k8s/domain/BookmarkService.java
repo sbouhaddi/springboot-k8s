@@ -23,4 +23,13 @@ public class BookmarkService {
     /* return new BookmarksDto(
     bookmarkRepository.findBookmarks(pageable));*/
   }
+
+  @Transactional(readOnly = true)
+  public BookmarksDto searchBookmarks(final String query, final Integer page) {
+    val pageNo = page < 1 ? 0 : page - 1;
+    val pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "createdAt");
+    // val bookmarkVMs = bookmarkRepository.searchBookmarks(query, pageable);
+    return new BookmarksDto(
+        bookmarkRepository.findByDescriptionContainsIgnoreCase(query, pageable));
+  }
 }
