@@ -27,5 +27,5 @@ jobs:
         name: Build and Publish Docker Image
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/k8S-api
-          docker push ${{ secrets.DOCKER_USERNAME }}/k8s-api
+          mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${{ secrets.DOCKER_USERNAME }}/k8S-sample
+          docker push ${{ secrets.DOCKER_USERNAME }}/k8s-sample
