@@ -1,10 +1,12 @@
 package dev.sabri.k8s.domain;
 
 import java.util.List;
+import lombok.Builder;
 import org.springframework.data.domain.Page;
 
+@Builder
 public record BookmarksDto(
-    List<BookmarkDto> data,
+    List<BookmarkDto> bookmarks,
     long totalElements,
     int totalPages,
     int currentPage,
