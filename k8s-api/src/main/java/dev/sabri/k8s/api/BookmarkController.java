@@ -1,12 +1,13 @@
 package dev.sabri.k8s.api;
 
+import dev.sabri.k8s.domain.BookmarkDto;
 import dev.sabri.k8s.domain.BookmarkService;
 import dev.sabri.k8s.domain.BookmarksDto;
+import dev.sabri.k8s.domain.CreateBookmarkRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/bookmarks")
@@ -23,5 +24,12 @@ public class BookmarkController {
       return bookmarkService.getAllBookmarks(page);
     }
     return bookmarkService.searchBookmarks(query, page);
+  }
+
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public BookmarkDto createBookmark(
+      @RequestBody @Valid CreateBookmarkRequest createBookmarkRequest) {
+    return bookmarkService.createBookmark(createBookmarkRequest);
   }
 }

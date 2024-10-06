@@ -1,10 +1,12 @@
 package dev.sabri.k8s.api;
 
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import dev.sabri.k8s.domain.Bookmark;
-import dev.sabri.k8s.domain.BookmarkRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.sabri.k8s.domain.*;
 import java.time.Instant;
 import java.util.List;
 import lombok.val;
@@ -16,6 +18,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,6 +30,7 @@ class BookmarkControllerTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private BookmarkRepository bookmarkRepository;
+  @Autowired private ObjectMapper mapper;
 
   @BeforeEach
   void setUp() {
@@ -153,5 +157,39 @@ class BookmarkControllerTest {
         .andExpect(jsonPath("$.isLast").value(false))
         .andExpect(jsonPath("$.hasNext").value(true))
         .andExpect(jsonPath("$.hasPrevious").value(false));
+  }
+
+  @Test
+  void createBookmark_ValidRequest_ReturnsCreatedBookmark() throws Exception {
+    // Arrange
+    val createBookmarkRequest = new CreateBookmarkRequest();
+    createBookmarkRequest.setDescription("Test Description 99");
+    createBookmarkRequest.setUrl("https://example99.com");
+
+    // Act & Assert
+    mockMvc
+        .perform(
+            post("/api/bookmarks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writer().writeValueAsString(createBookmarkRequest)))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id", notNullValue()))
+        .andExpect(jsonPath("$.url").value("https://example99.com"))
+        .andExpect(jsonPath("$.description").value("Test Description 99"));
+  }
+
+  @Test
+  void createBookmark_InvalidRequest_ReturnsBadRequest() throws Exception {
+    // Arrange
+    CreateBookmarkRequest createBookmarkRequest = new CreateBookmarkRequest();
+    createBookmarkRequest.setUrl("https://example.com"); // Invalid as description is empty
+
+    // Act & Assert
+    mockMvc
+        .perform(
+            post("/api/bookmarks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writer().writeValueAsString(createBookmarkRequest)))
+        .andExpect(status().isBadRequest());
   }
 }

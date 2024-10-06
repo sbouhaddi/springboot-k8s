@@ -1,5 +1,6 @@
 package dev.sabri.k8s.domain;
 
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.data.domain.PageRequest;
@@ -31,5 +32,16 @@ public class BookmarkService {
     // val bookmarkVMs = bookmarkRepository.searchBookmarks(query, pageable);
     return new BookmarksDto(
         bookmarkRepository.findByDescriptionContainsIgnoreCase(query, pageable));
+  }
+
+  public BookmarkDto createBookmark(final CreateBookmarkRequest createBookmarkRequest) {
+    val bookmark =
+        bookmarkRepository.save(
+            new Bookmark(
+                null,
+                createBookmarkRequest.getUrl(),
+                createBookmarkRequest.getDescription(),
+                Instant.now()));
+    return bookmarkMapper.bookmarkToBookmarkDTO(bookmark);
   }
 }
