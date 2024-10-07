@@ -32,4 +32,16 @@ public class BookmarkController {
       @RequestBody @Valid CreateBookmarkRequest createBookmarkRequest) {
     return bookmarkService.createBookmark(createBookmarkRequest);
   }
+
+  @DeleteMapping
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteBookmark(@RequestParam(value = "id") long id) {
+    bookmarkService.deleteBookmark(id);
+  }
+
+  @PutMapping("/{id}")
+  public BookmarkDto updateBookmark(
+      @PathVariable("id") long id, @RequestBody @Valid CreateBookmarkRequest updateRequest) {
+    return bookmarkService.updateBookmark(id, updateRequest);
+  }
 }

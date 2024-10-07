@@ -1,8 +1,7 @@
 package dev.sabri.k8s.api;
 
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -181,7 +180,7 @@ class BookmarkControllerTest {
   @Test
   void createBookmark_InvalidRequest_ReturnsBadRequest() throws Exception {
     // Arrange
-    CreateBookmarkRequest createBookmarkRequest = new CreateBookmarkRequest();
+    val createBookmarkRequest = new CreateBookmarkRequest();
     createBookmarkRequest.setUrl("https://example.com"); // Invalid as description is empty
 
     // Act & Assert
@@ -190,6 +189,86 @@ class BookmarkControllerTest {
             post("/api/bookmarks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writer().writeValueAsString(createBookmarkRequest)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void deleteBookmark_ValidId_ShouldInvokeServiceAndReturnNoContent() throws Exception {
+    val bookmark = bookmarkRepository.findAll().getFirst();
+    val bookmarkId = bookmark.getId();
+    // Act & Assert
+    mockMvc
+        .perform(delete("/api/bookmarks").param("id", String.valueOf(bookmarkId)))
+        .andExpect(status().isNoContent());
+  }
+
+  @Test
+  void deleteBookmark_ValidId_ShouldInvokeServiceAndReturnNotFound() throws Exception {
+    val bookmarkId = 1L;
+    // Act & Assert
+    mockMvc
+        .perform(delete("/api/bookmarks").param("id", String.valueOf(bookmarkId)))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void deleteBookmark_InvalidId_ShouldReturnBadRequest() throws Exception {
+    String invalidId = "invalid";
+    // Act & Assert
+    mockMvc
+        .perform(delete("/api/bookmarks").param("id", invalidId))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void updateBookmark_ValidRequest_ReturnsUpdatedBookmark() throws Exception {
+    // Arrange
+    val bookmark = bookmarkRepository.findAll().getFirst();
+    val bookmarkId = bookmark.getId();
+    val updateRequest = new CreateBookmarkRequest();
+    updateRequest.setDescription("Updated Description");
+    updateRequest.setUrl("https://updated.url");
+
+    // Act & Assert
+    mockMvc
+        .perform(
+            put("/api/bookmarks/{id}", bookmarkId)
+                .contentType("application/json")
+                .content(mapper.writeValueAsString(updateRequest)))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void updateBookmark_InvalidId_ShouldReturnBadRequest() throws Exception {
+    // Arrange
+    val invalidId = "invalidId";
+    val updateRequest = new CreateBookmarkRequest();
+    updateRequest.setDescription("Updated Description");
+    updateRequest.setUrl("https://updated.url");
+
+    // Act & Assert
+    mockMvc
+        .perform(
+            put("/api/bookmarks/{id}", invalidId)
+                .contentType("application/json")
+                .content(mapper.writeValueAsString(updateRequest)))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void updateBookmark_InvalidRequest_ShouldReturnBadRequest() throws Exception {
+    // Arrange
+    val bookmark = bookmarkRepository.findAll().getFirst();
+    val bookmarkId = bookmark.getId();
+    val updateRequest = new CreateBookmarkRequest();
+    updateRequest.setUrl("https://invalid.url"); // Invalid URL
+
+    // Act & Assert
+    mockMvc
+        .perform(
+            put("/api/bookmarks/{id}", bookmarkId)
+                .contentType("application/json")
+                .content(mapper.writeValueAsString(updateRequest)))
         .andExpect(status().isBadRequest());
   }
 }

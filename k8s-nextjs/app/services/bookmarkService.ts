@@ -16,24 +16,22 @@ interface CreateBookmarkRequest {
 }
 
 export const getBookmarks = async (page = 1, query = ''): Promise<Bookmark[]> => {
-  try {
-    const response = await axios.get(`${BASE_URL}/api/bookmarks`, {
-      params: { page, query }
-    });
-    return response.data.bookmarks;
-  } catch (error) {
-    console.error('Error fetching bookmarks:', error);
-    throw error;
-  }
+  const response = await axios.get(`${BASE_URL}/api/bookmarks`, {
+    params: { page, query }
+  });
+  return response.data.bookmarks;
 };
 
 export const createBookmark = async (data: CreateBookmarkRequest) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/api/bookmarks`, data);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating a bookmark:', error);
-    throw error;
-  }
+  const response = await axios.post(`${BASE_URL}/api/bookmarks`, data);
+  return response.data;
 };
 
+export const deleteBookmark = async (id: string) => {
+  await axios.delete(`${BASE_URL}/api/bookmarks?id=${id}`);
+};
+
+export const updateBookmark = async (id: string, data: CreateBookmarkRequest) => {
+  const response = await axios.put(`${BASE_URL}/api/bookmarks/${id}`, data);
+  return response.data;
+};
