@@ -15,12 +15,12 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
   @Query(
       """
-     SELECT new dev.sabri.k8s.domain.BookmarkDto(b.id, b.url, b.description, b.createdAt ) FROM Bookmark b
-     WHERE LOWER(b.description) like LOWER(CONCAT('%',:query, '%'))
-     """)
-  Page<BookmarkVM> searchBookmarks(String query, PageRequest pageable);
+         SELECT new dev.sabri.k8s.domain.BookmarkDto(b.id, b.url, b.description, b.createdAt ) FROM Bookmark b
+         WHERE LOWER(b.description) like LOWER(CONCAT('%',:query, '%'))
+         """)
+  Page<BookmarkDto> searchBookmarks(String query, PageRequest pageable);
 
-  Page<BookmarkDto> findByDescriptionContainsIgnoreCase(String description, PageRequest pageable);
+  Page<Bookmark> findByDescriptionContainsIgnoreCase(String description, PageRequest pageable);
 
   // Page<BookmarkVM> findByDescriptionContainsIgnoreCase(String description, PageRequest pageable);
 }

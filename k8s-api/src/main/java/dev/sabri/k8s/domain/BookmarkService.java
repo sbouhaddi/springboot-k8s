@@ -29,9 +29,12 @@ public class BookmarkService {
   public BookmarksDto searchBookmarks(final String query, final Integer page) {
     val pageNo = page < 1 ? 0 : page - 1;
     val pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "createdAt");
-    // val bookmarkVMs = bookmarkRepository.searchBookmarks(query, pageable);
-    return new BookmarksDto(
-        bookmarkRepository.findByDescriptionContainsIgnoreCase(query, pageable));
+    // val bookmarks = bookmarkRepository.searchBookmarks(query, pageable);
+    val bookmarks =
+        bookmarkRepository
+            .findByDescriptionContainsIgnoreCase(query, pageable)
+            .map(bookmarkMapper::bookmarkToBookmarkDTO);
+    return new BookmarksDto(bookmarks);
   }
 
   public BookmarkDto createBookmark(final CreateBookmarkRequest createBookmarkRequest) {
