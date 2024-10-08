@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  push:
+    paths:
+      - "k8S-nextjs/**"
+    branches: [ "main" ]
+  pull_request:
+    paths:
+      - "k8S-nextjs/**"
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  build-bookmarker-ui:
+    name: Build k8S-ui
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./k8S-nextjs
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: k8S-nextjs/package-lock.json
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - if: ${{ github.ref == 'refs/heads/main' }}
+        name: Build and Publish Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/k8s-nextjs .
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/k8s-nextjs
