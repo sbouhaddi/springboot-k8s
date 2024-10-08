@@ -91,7 +91,7 @@ const Bookmarks: React.FC = () => {
   // Handle updating a bookmark
   const handleUpdateBookmark = async (id: string) => {
     if (!editDescription || !editUrl) {
-      alert('Description and URL are required for update.');
+      alert('Description and URL are required for update bookmark.');
       return;
     }
 
