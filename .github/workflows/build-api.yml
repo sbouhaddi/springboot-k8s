@@ -3,11 +3,11 @@ name: Build
 on:
   push:
     paths:
-      - "k8s-api/**"
+      - "springboot-k8s/k8s-api/**"
     branches: [ "main" ]
   pull_request:
     paths:
-      - "k8s-api/**"
+      - "springboot-k8s/k8s-api/**"
     types:
       - opened
       - synchronize
