@@ -32,7 +32,7 @@ const Bookmarks: React.FC = () => {
       const data = await getBookmarks(page, query);
       setBookmarks(data);
     } catch (error) {
-      console.error('Failed to fetch bookmarks');
+      console.error('Failed to fetch bookmarks' + error);
     } finally {
       setLoading(false);
     }
@@ -58,6 +58,7 @@ const Bookmarks: React.FC = () => {
 
     try {
       const newBookmark = await createBookmark({ description, url });
+      console.log(newBookmark);
       // Clear input fields after successful creation
       setDescription('');
       setUrl('');
@@ -96,6 +97,7 @@ const Bookmarks: React.FC = () => {
 
     try {
       const updatedBookmark = await updateBookmark(id, { description: editDescription, url: editUrl });
+      console.log(updatedBookmark);
       setEditingBookmarkId(null);
       setIsModalOpen(false); // Close the editing form
       fetchBookmarks();
