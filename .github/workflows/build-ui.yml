@@ -3,11 +3,11 @@ name: Build
 on:
   push:
     paths:
-      - "k8S-nextjs/**"
+      - "k8s-nextjs/**"
     branches: [ "main" ]
   pull_request:
     paths:
-      - "k8S-nextjs/**"
+      - "k8s-nextjs/**"
     types:
       - opened
       - synchronize
@@ -15,11 +15,11 @@ on:
 
 jobs:
   build-bookmarker-ui:
-    name: Build k8S-ui
+    name: Build k8s-nextjs
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./k8S-nextjs
+        working-directory: ./k8s-nextjs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: k8S-nextjs/package-lock.json
+          cache-dependency-path: k8s-nextjs/package-lock.json
       - name: Install dependencies
         run: npm install
 
