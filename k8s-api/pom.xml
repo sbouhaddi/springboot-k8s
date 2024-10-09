@@ -127,6 +127,9 @@
                         <name>
                             sbouhaddi/k8s-api
                         </name>
+                        <build>
+                            <dockerfile>Dockerfile.layered</dockerfile> <!-- Path to your Dockerfile -->
+                        </build>
                     </image>
                     <excludes>
                         <exclude>
