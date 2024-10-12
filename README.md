@@ -7,9 +7,6 @@ cd springboot-k8s
 ./run.sh start
 ./run.sh stop
 
-
-./run.sh start_infra
-./run.sh stop_infra
 ```
 
 * How to start database dependencies
@@ -20,17 +17,18 @@ cd springboot-k8s
 ```
 
 
-
 # How to build a docker image with different méthods
 * google jib
 ```shell
 mvn jib:build
 mvn jib:dockerBuild
 ```
+
 * spring boot plugin
 ```shell
 mvn spring-boot:build-image
 ```
+
 * run docker image locally
 ```shell
 docker run  -p 8080:8080 sbouhaddi/k8s-api
@@ -42,7 +40,24 @@ docker-compose up -d
 docker-compose logs -f
 docker compose -f docker-compose.yml -f docker-compose-app.yml up  -d
 ```
+
 ## Access pod (Windows)
 ```shell
 winpty kubectl exec -i -t -n default k8s-api -c k8s-api -- sh -c "clear; (bash || ash || sh)"
 ```
+
+
+## How to start locally ( docker-compose ) ?
+```shell
+./run.sh
+```
+
+## How to start locally ( Kubernetes ) ?
+```shell
+cd kind
+./create-cluster.sh
+cd ../k8s
+kubectl deploy -f .
+```
+Api : localhst/k8s-api/api/bookmarks
+UI : localhost
