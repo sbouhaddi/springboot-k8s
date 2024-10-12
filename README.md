@@ -59,7 +59,7 @@ cd kind
 cd ../k8s
 kubectl deploy -f .
 ```
-Api : localhst/k8s-api/api/bookmarks
+Api : localhost/k8s-api/api/bookmarks
 
 
 UI : localhost
