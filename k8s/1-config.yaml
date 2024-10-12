@@ -15,5 +15,3 @@ type: Opaque
 data:
   postgres_user: cG9zdGdyZXM=
   postgres_password: cG9zdGdyZXM=
-
-
