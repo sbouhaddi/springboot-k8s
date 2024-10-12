@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: 'standard'
+  hostPath:
+    path: /data/db
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  storageClassName: 'standard'
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  selector:
+    matchLabels:
+      app: postgres-pod  
+  template:
+    metadata:
+      labels:
+        app: postgres-pod    
+    spec:
+      containers:
+        - name: postgres
+          image: "postgres:14-alpine"
+          ports:
+            - name: postgres
+              containerPort: 5432
+          env: 
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secrets
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secrets
+                  key: postgres_password
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-config
+                  key: postgres_db
+            - name: PGDATA
+              value: /var/lib/postgres/data/pgdata
+          volumeMounts:
+            - mountPath: /var/lib/postgres/data
+              name: postgres-storage
+      volumes: 
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres-pod
+  ports:
+  - port: 5432
+    targetPort: 5432

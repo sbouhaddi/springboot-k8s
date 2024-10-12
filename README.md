@@ -42,3 +42,7 @@ docker-compose up -d
 docker-compose logs -f
 docker compose -f docker-compose.yml -f docker-compose-app.yml up  -d
 ```
+## Access pod (Windows)
+```shell
+winpty kubectl exec -i -t -n default k8s-api -c k8s-api -- sh -c "clear; (bash || ash || sh)"
+```
